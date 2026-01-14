@@ -1,80 +1,92 @@
-# VaultX – DeFi Strategy Vault Platform
+# VaultX – Non-Custodial DeFi Strategy Platform
 
-> **VaultX** is a non-custodial DeFi trading platform where users can deposit funds directly from their wallets into on-chain strategy vaults. Each vault follows a predefined trading strategy executed automatically by a backend bot, while funds always remain transparent, secure, and on-chain.
----
+> **VaultX** is a non-custodial DeFi platform that allows users to deposit funds directly from their wallets into on-chain strategy vaults. Each vault follows a predefined trading strategy executed automatically by a backend bot, while users always retain ownership of their funds.
 
-## 🌟 What Problem Does VaultX Solve?
-
-* Users want to **earn via trading strategies** without manually trading
-* Users don’t want to **give custody** of their funds to an app
-* Strategy creators want to **share or monetize** their strategies
-* Everything should be **transparent, on-chain, and verifiable**
-
-VaultX solves this by combining **smart contract vaults + backend execution + mobile-first UX**.
+VaultX supports **Web (Vite + React)**, **Mobile (React Native)**, **Smart Contracts**, and a **Django-based execution backend**, making it a complete, production-grade Web3 system.
 
 ---
 
-## 🧠 Core Concept (Simple)
+## 🌟 Why VaultX?
 
-* Users connect their wallet via mobile app
-* Users choose a strategy vault
-* Users deposit funds directly into a smart contract
-* Backend bot executes trades according to strategy rules
-* Profits/losses are reflected in vault share value
-* Users can withdraw anytime (as per rules)
+* ❌ No custodial app wallet
+* ✅ Funds always stay on-chain
+* 📊 Multiple trading strategies
+* 🧩 User-created strategies
+* 📱 Mobile-first + Web dashboard
+* 🔍 Fully transparent & verifiable
 
 ---
 
-## 🏗️ High-Level Architecture
+## 🧠 Core Concept (Simple Flow)
 
 ```
-React Native App
-   ↓ (WalletConnect)
 User Wallet
-   ↓ (Deposit)
+   ↓ deposit
 Strategy Vault (Smart Contract)
-   ↓ (Authorized Executor)
-Django Backend (Strategy Bot)
+   ↓
+Backend Executor (Django + Celery)
    ↓
 DEX (Uniswap / PancakeSwap)
+```
+
+* Users deposit funds directly into vault contracts
+* Vault issues shares representing ownership
+* Backend bot executes trades based on strategy rules
+* Users can withdraw anytime based on share value
+
+---
+
+## 🏗️ Full System Architecture
+
+```
+Web App (Vite + React) ─┐
+                        ├─→ Django REST API
+Mobile App (React Native)┘
+                              ↓
+                       Strategy Executor (Celery)
+                              ↓
+                     Smart Contracts (Vaults)
+                              ↓
+                        DEX (On-chain Trading)
 ```
 
 ---
 
 ## 🧱 Tech Stack
 
+### 🌐 Web Frontend
+
+* Vite + React + JavaScript
+* Wagmi
+* WalletConnect
+* Charting libraries (ECharts)
+
 ### 📱 Mobile App
 
 * React Native (Expo)
 * JavaScript
 * WalletConnect v2
-* Ethers.js / Viem
+* Ethers.js
 
 ### 🔐 Smart Contracts
 
 * Solidity (EVM compatible)
 * Hardhat
 * OpenZeppelin
-* Target Chains: Polygon / Arbitrum (low gas)
+* Target Chains: Arbitrum
 
 ### 🧠 Backend (Execution Engine)
 
 * Django
 * Django REST Framework
-* Celery (background strategy execution)
-* Redis (task queue)
-* Web3.py (blockchain interaction)
-* CCXT (market data, optional)
+* Celery + Celery Beat
+* Redis
+* Web3.py
+* CCXT (optional market data)
 
 ### 🗄️ Database
 
 * PostgreSQL
-
-### ⚙️ Dev & Infra (No Docker Initially)
-
-* Python virtualenv
-* systemd / supervisor (for production later)
-* .env based secrets
 
 ---
 
@@ -97,12 +109,22 @@ vaultx/
 │   ├── manage.py
 │   └── requirements.txt
 │
-├── app/                    # React Native app
+├── web/                    # Web frontend (Vite + React)
+│   ├── src/
+│   │   ├── pages/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── services/
+│   │   └── web3/
+│   ├── index.html
+│   ├── vite.config.ts
+│   └── package.json
+│
+├── app/                    # Mobile app (React Native)
 │   ├── src/
 │   ├── screens/
 │   ├── components/
-│   ├── wallet/
-│   └── services/
+│   └── wallet/
 │
 ├── docs/                   # Architecture & diagrams
 ├── .env.example
@@ -113,7 +135,9 @@ vaultx/
 
 ## 🧩 Strategy System
 
-Strategies are **rule-based (no AI initially)** and defined in a JSON/DSL format.
+VaultX uses **rule-based strategies** (AI-ready for future).
+
+### Example Strategy Definition
 
 ```json
 {
@@ -125,9 +149,9 @@ Strategies are **rule-based (no AI initially)** and defined in a JSON/DSL format
 }
 ```
 
-* Strategies are evaluated off-chain
-* Trades are executed on-chain
-* AI models can replace rule engine later without changing architecture
+* Strategies evaluated off-chain
+* Trades executed on-chain
+* Same system can later plug in AI models
 
 ---
 
@@ -135,22 +159,22 @@ Strategies are **rule-based (no AI initially)** and defined in a JSON/DSL format
 
 ### 1️⃣ Platform Strategies
 
-* Created and maintained by VaultX team
-* Verified & risk-controlled
+* Created & maintained by VaultX
+* Verified and risk-limited
 
 ### 2️⃣ User-Created Strategies
 
-* Users define strategy rules via app UI
-* Backend validates & deploys
-* Optional profit-sharing in future
+* Users define strategies via Web/Mobile UI
+* Backend validates and deploys
+* Future: profit-sharing & strategy NFTs
 
 ---
 
-## 🔐 Security Principles (Non-Negotiable)
+## 🔐 Security Principles
 
 * ❌ No app-owned wallet
 * ✅ Funds only in smart contracts
-* ✅ Role-based execution (Executor role)
+* ✅ Executor role for backend bot
 * ✅ Emergency pause & withdraw
 * ✅ Strategy-level risk limits
 
@@ -159,38 +183,38 @@ Strategies are **rule-based (no AI initially)** and defined in a JSON/DSL format
 ## 🔄 Backend Execution Flow
 
 ```
-Celery Scheduler
+Scheduler (Celery Beat)
    ↓
 Fetch Market Data
    ↓
 Evaluate Strategy Rules
    ↓
-Risk Management Check
+Risk Management Checks
    ↓
-Execute Trade (Smart Contract)
+Execute Trade via Smart Contract
    ↓
-Log Trade & Update PnL
+Log Trades & Update PnL
 ```
 
 ---
 
 ## 🛣️ Development Roadmap
 
-### Phase 1 – Foundation
+### Phase 1 – Core
 
 * Strategy vault smart contracts
 * Django execution engine
-* Manual strategies
+* Basic Web dashboard
 
 ### Phase 2 – User Power
 
 * User-created strategies
-* Performance dashboards
-* Strategy discovery
+* Mobile app
+* Advanced analytics
 
 ### Phase 3 – Advanced
 
-* AI-based strategies
+* AI strategies
 * DAO governance
 * Strategy NFTs
 * Cross-chain vaults
@@ -199,13 +223,13 @@ Log Trade & Update PnL
 
 ## ⚠️ Disclaimer
 
-This project is for **educational and experimental purposes** only. Crypto trading involves significant risk. Do not deploy with real funds without audits.
+This project is for **educational and experimental purposes only**. Crypto trading involves risk. Do not deploy with real funds without proper audits.
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome. Please open an issue or submit a pull request.
+Contributions are welcome via issues and pull requests.
 
 ---
 

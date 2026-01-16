@@ -5,6 +5,7 @@ from django.contrib.auth.models import (
     BaseUserManager,
 )
 
+
 class UserManager(BaseUserManager):
     def create_user(self, wallet_address, password=None, **extra_fields):
         if not wallet_address:
@@ -40,3 +41,5 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.wallet_address
+
+

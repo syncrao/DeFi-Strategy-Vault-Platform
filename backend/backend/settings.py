@@ -1,10 +1,14 @@
 from pathlib import Path
 from datetime import timedelta
+import dj_database_url
+import environ
+import os
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-SECRET_KEY = 'django-insecure-g^_otct7z6j-=b&jq&0dcgp#i7irlur))&mj#@%-e1#4*#dzv%'
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
+SECRET_KEY = env('SECRET_KEY')
 
 DEBUG = True
 
@@ -54,11 +58,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=env('DATABASE')
+    )
 }
 
 AUTH_PASSWORD_VALIDATORS = [

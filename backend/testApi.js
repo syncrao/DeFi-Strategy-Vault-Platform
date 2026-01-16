@@ -1,7 +1,10 @@
+const URL = "https://defibackend.vercel.app/"
+const LOCAL_URL = "http://127.0.0.1:8000/"
+
 async function postRequest(path, data) {
   console.log(`${path} testing...`);
 
-  const res = await fetch(`http://127.0.0.1:8000/${path}/`, {
+  const res = await fetch(`${URL}${path}/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

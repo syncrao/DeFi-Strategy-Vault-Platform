@@ -15,6 +15,12 @@ export default function Layout() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 relative overflow-hidden">
       <div className="flex min-h-screen relative z-10">
+        {sidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black/30 z-20 transition-all duration-300"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
         <Sidebar
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}

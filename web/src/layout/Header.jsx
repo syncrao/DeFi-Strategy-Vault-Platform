@@ -1,13 +1,17 @@
 import { Bell, Menu, Search, Wallet } from "lucide-react";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
-import { useAccount, useChainId } from "wagmi";
+import { useAccount, useChainId, useDisconnect } from "wagmi";
 import { getChainById } from "../utils/chainConfig";
+import { useState } from "react";
 
 export default function Header({ setSidebarOpen }) {
   const { open } = useWeb3Modal();
   const chainId = useChainId();
   const { address, isConnected } = useAccount();
   const chain = getChainById(chainId);
+
+  const { disconnect } = useDisconnect();
+  const [connecting, setConnecting] = useState(false);
 
   return (
     <div className="bg-white/10 px-6 py-2 border-b border-white/20  backdrop-blur-xl">
@@ -38,12 +42,26 @@ export default function Header({ setSidebarOpen }) {
             </button>
             <button
               onClick={async () => {
-                if (isConnected && !address) {
+                if (connecting) return;
+
+                setConnecting(true);
+
+                try {
+                  await disconnect();
+
                   localStorage.removeItem("walletconnect");
                   localStorage.removeItem("wagmi.store");
                   localStorage.removeItem("wagmi.cache");
+
+                
+                  setTimeout(() => {
+                    open();
+                    setConnecting(false);
+                  }, 300);
+                } catch (err) {
+                  open();
+                  setConnecting(false);
                 }
-                open();
               }}
               className="flex items-center space-x-3  bg-white/10 backdrop-blur-xl rounded-2xl px-4 py-2 border border-white/20 hover:bg-white/20 transition-all duration-300 cursur-pointer group"
             >

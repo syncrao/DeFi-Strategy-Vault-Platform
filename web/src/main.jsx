@@ -16,6 +16,10 @@ createWeb3Modal({
   wagmiConfig: config,
   projectId: import.meta.env.VITE_REOWN_PROJECT_ID,
   chains,
+   themeVariables: {
+    "--w3m-accent": "#0ea5e9",
+    "--w3m-border-radius-master": "14px"
+  }
 });
 
 createRoot(document.getElementById("root")).render(

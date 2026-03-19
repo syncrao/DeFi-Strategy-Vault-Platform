@@ -1,17 +1,18 @@
 # VaultX – Non-Custodial DeFi Strategy Platform
 
-> **VaultX** is a non-custodial DeFi platform that allows users to deposit funds directly from their wallets into on-chain strategy vaults. Each vault follows a predefined trading strategy executed automatically by a backend bot, while users always retain ownership of their funds.
+> **VaultX** is a non-custodial DeFi platform that allows users to deposit funds directly from their wallets into on-chain strategy vaults built on **Solana**. Each vault follows a predefined or AI-driven trading strategy executed by a backend engine, while users always retain ownership of their funds.
 
-VaultX supports **Web (Vite + React)**, **Mobile (React Native)**, **Smart Contracts**, and a **Django-based execution backend**, making it a complete, production-grade Web3 system.
+VaultX supports **Web (Next.js)**, **Mobile (React Native)**, **Solana Smart Contracts (Anchor)**, and a **Django-based AI/strategy engine**, making it a complete production-grade Web3 system.
 
 ---
 
 ## 🌟 Why VaultX?
 
 * ❌ No custodial app wallet
-* ✅ Funds always stay on-chain
+* ✅ Funds always stay on-chain (Solana)
+* ⚡ High-speed & low-cost transactions
 * 📊 Multiple trading strategies
-* 🧩 User-created strategies
+* 🧩 User-created + AI strategies
 * 📱 Mobile-first + Web dashboard
 * 🔍 Fully transparent & verifiable
 
@@ -20,18 +21,19 @@ VaultX supports **Web (Vite + React)**, **Mobile (React Native)**, **Smart Contr
 ## 🧠 Core Concept (Simple Flow)
 
 ```
-User Wallet
+User Wallet (Phantom / Solflare)
    ↓ deposit
-Strategy Vault (Smart Contract)
+Strategy Vault (Solana Program - Anchor)
    ↓
-Backend Executor (Django + Celery)
+Backend AI Engine (Django)
    ↓
-DEX (Uniswap / PancakeSwap)
+DEX (Jupiter / Raydium / Orca)
 ```
 
-* Users deposit funds directly into vault contracts
+* Users deposit funds directly into vault programs
 * Vault issues shares representing ownership
-* Backend bot executes trades based on strategy rules
+* Backend evaluates strategies (rule-based / AI)
+* Trades executed on-chain via Solana programs
 * Users can withdraw anytime based on share value
 
 ---
@@ -39,15 +41,17 @@ DEX (Uniswap / PancakeSwap)
 ## 🏗️ Full System Architecture
 
 ```
-Web App (Vite + React) ─┐
-                        ├─→ Django REST API
+Web App (Next.js) ───────┐
+                         ├─→ API Layer (Next.js API Routes)
 Mobile App (React Native)┘
-                              ↓
-                       Strategy Executor (Celery)
-                              ↓
-                     Smart Contracts (Vaults)
-                              ↓
-                        DEX (On-chain Trading)
+                               ↓
+                      Strategy & AI Engine (Django)
+                               ↓
+                      Execution Workers (Celery)
+                               ↓
+                    Solana Programs (Anchor Vaults)
+                               ↓
+                  DEX Aggregators (Jupiter / Orca)
 ```
 
 ---
@@ -56,37 +60,39 @@ Mobile App (React Native)┘
 
 ### 🌐 Web Frontend
 
-* Vite + React + JavaScript
-* Wagmi
-* WalletConnect
-* Charting libraries (ECharts)
+* Next.js (App Router)
+* TypeScript / JavaScript
+* Tailwind CSS
+* Solana Wallet Adapter
+* Zustand / React Query
+* Charting (ECharts / Recharts)
 
 ### 📱 Mobile App
 
 * React Native (Expo)
-* JavaScript
-* WalletConnect v2
-* Ethers.js
+* WalletConnect / Solana Mobile Stack
+* Solana Web3.js
 
-### 🔐 Smart Contracts
+### 🔐 Smart Contracts (Solana)
 
-* Solidity (EVM compatible)
-* Hardhat
-* OpenZeppelin
-* Target Chains: Arbitrum
+* Rust (Anchor Framework)
+* Solana Programs (Vault logic)
+* SPL Tokens
+* PDA-based vault architecture
 
-### 🧠 Backend (Execution Engine)
+### 🧠 Backend (AI & Strategy Engine)
 
 * Django
 * Django REST Framework
 * Celery + Celery Beat
 * Redis
-* Web3.py
-* CCXT (optional market data)
+* AI/ML strategy modules (future-ready)
+* Web3 interaction via Solana RPC
 
-### 🗄️ Database
+### 🗄️ Databases
 
-* PostgreSQL
+* **MongoDB** → Used by Next.js (user data, UI state, caching, analytics)
+* **PostgreSQL** → Used by Django (strategies, execution logs, AI models, trades)
 
 ---
 
@@ -95,29 +101,29 @@ Mobile App (React Native)┘
 ```
 vaultx/
 │
-├── contracts/              # Solidity smart contracts
-│   ├── StrategyVault.sol
-│   ├── StrategyRegistry.sol
-│   └── roles/
+├── programs/               # Solana Anchor programs
+│   ├── strategy_vault/
+│   ├── strategy_registry/
+│   └── utils/
 │
-├── backend/                # Django backend
+├── backend/                # Django AI & execution engine
 │   ├── core/
 │   ├── strategies/
 │   ├── execution/
+│   ├── ai/
 │   ├── risk/
 │   ├── users/
 │   ├── manage.py
 │   └── requirements.txt
 │
-├── web/                    # Web frontend (Vite + React)
-│   ├── src/
-│   │   ├── pages/
-│   │   ├── components/
-│   │   ├── hooks/
-│   │   ├── services/
-│   │   └── web3/
-│   ├── index.html
-│   ├── vite.config.ts
+├── web/                    # Web frontend (Next.js)
+│   ├── app/
+│   ├── components/
+│   ├── hooks/
+│   ├── lib/
+│   ├── services/
+│   ├── web3/
+│   ├── models/             # MongoDB models
 │   └── package.json
 │
 ├── app/                    # Mobile app (React Native)
@@ -135,7 +141,7 @@ vaultx/
 
 ## 🧩 Strategy System
 
-VaultX uses **rule-based strategies** (AI-ready for future).
+VaultX uses **rule-based + AI-driven strategies**.
 
 ### Example Strategy Definition
 
@@ -149,9 +155,9 @@ VaultX uses **rule-based strategies** (AI-ready for future).
 }
 ```
 
-* Strategies evaluated off-chain
-* Trades executed on-chain
-* Same system can later plug in AI models
+* Strategies evaluated off-chain (Django AI engine)
+* Trades executed on-chain (Solana programs)
+* Future-ready for ML/AI models
 
 ---
 
@@ -160,22 +166,23 @@ VaultX uses **rule-based strategies** (AI-ready for future).
 ### 1️⃣ Platform Strategies
 
 * Created & maintained by VaultX
-* Verified and risk-limited
+* Audited and risk-managed
 
 ### 2️⃣ User-Created Strategies
 
 * Users define strategies via Web/Mobile UI
-* Backend validates and deploys
-* Future: profit-sharing & strategy NFTs
+* Stored & validated via Django backend
+* Future: monetization + strategy NFTs
 
 ---
 
 ## 🔐 Security Principles
 
-* ❌ No app-owned wallet
-* ✅ Funds only in smart contracts
-* ✅ Executor role for backend bot
-* ✅ Emergency pause & withdraw
+* ❌ No centralized custody
+* ✅ Funds only stored in Solana programs
+* ✅ PDA-based secure vault design
+* ✅ Role-based execution control
+* ✅ Emergency pause & withdrawal
 * ✅ Strategy-level risk limits
 
 ---
@@ -185,15 +192,17 @@ VaultX uses **rule-based strategies** (AI-ready for future).
 ```
 Scheduler (Celery Beat)
    ↓
-Fetch Market Data
+Fetch Market Data (DEX / APIs)
    ↓
-Evaluate Strategy Rules
+AI / Rule Evaluation
    ↓
 Risk Management Checks
    ↓
-Execute Trade via Smart Contract
+Trigger Solana Transaction
    ↓
-Log Trades & Update PnL
+Execute Trade via Vault Program
+   ↓
+Store Logs (PostgreSQL)
 ```
 
 ---
@@ -202,28 +211,31 @@ Log Trades & Update PnL
 
 ### Phase 1 – Core
 
-* Strategy vault smart contracts
-* Django execution engine
-* Basic Web dashboard
+* Anchor-based vault programs (Solana)
+* Django strategy engine
+* Next.js dashboard
+* Wallet integration (Phantom)
 
 ### Phase 2 – User Power
 
 * User-created strategies
 * Mobile app
 * Advanced analytics
+* MongoDB integration
 
 ### Phase 3 – Advanced
 
-* AI strategies
+* AI-powered strategies
 * DAO governance
 * Strategy NFTs
-* Cross-chain vaults
+* Cross-chain expansion
 
 ---
 
 ## ⚠️ Disclaimer
 
-This project is for **educational and experimental purposes only**. Crypto trading involves risk. Do not deploy with real funds without proper audits.
+This project is for **educational and experimental purposes only**.
+Crypto trading involves risk. Do not use real funds without audits and security reviews.
 
 ---
 
@@ -236,3 +248,6 @@ Contributions are welcome via issues and pull requests.
 ## 📄 License
 
 MIT License
+
+---
+

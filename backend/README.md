@@ -1,141 +1,223 @@
-## ⚙️ Environment Setup
+# 🚀 DeFi Strategy Vault Platform - Backend
 
-Create a `.env` file in the **project root** (same level as `manage.py`).
+## 📌 Overview
 
-### Example `.env`
+This is the **backend service** for the DeFi Strategy Vault Platform.
+It is built using **Django** and acts as the core engine for:
 
-```env
-SECRET_KEY=your-secret-key-here
-DATABASE=postgres://username:password@localhost:5432/dbname
-```
+* Strategy execution
+* AI-based decision making
+* Risk management
+* User management
+* Trade orchestration
 
-### Notes
+The backend is designed to be **modular, scalable, and production-ready**.
 
-* `SECRET_KEY` → Django secret key
-* `DATABASE` → Database URL supported by `dj-database-url`
+---
 
-#### Database URL Examples
-
-**PostgreSQL**
-
-```
-postgres://user:password@host:5432/dbname
-```
-
-**SQLite (for local testing)**
+## 🧱 Project Structure
 
 ```
-sqlite:///db.sqlite3
+backend/
+│── core/          # Core settings, configs, utilities
+│── strategies/    # Strategy creation & management
+│── execution/     # Trade execution engine
+│── ai/            # AI models & prediction logic
+│── risk/          # Risk management system
+│── users/         # Authentication & user profiles
+│── manage.py
+│── requirements.txt
 ```
 
 ---
 
-## 📦 Install Dependencies
+## ⚙️ Tech Stack
+
+* **Backend Framework:** Django
+* **Language:** Python
+* **Database:** PostgreSQL 
+* **AI/ML:** Custom models ( TensorFlow / PyTorch)
+* **Task Queue (optional):** Celery + Redis
+* **API Layer:** Django REST Framework (DRF)
+
+---
+
+## 🔥 Features
+
+### 👤 Wallet-Based Authentication
+
+* Sign-in using crypto wallet (e.g. MetaMask / Phantom)
+* Message signing for secure authentication (no passwords required)
+* Backend verifies signature and maps wallet address to user
+* Optional session or token handling for API access
+* User profile linked with wallet address
+
+---
+
+### 📊 Strategy Engine
+
+* Create & manage trading strategies
+* Store strategy parameters
+* Strategy execution lifecycle
+
+---
+
+### ⚡ Execution Engine
+
+* Executes trades based on strategies
+* Handles order lifecycle
+* Integrates with external APIs (e.g. broker/exchange)
+
+---
+
+### 🤖 AI Module
+
+* Predictive models for trading signals
+* Market pattern analysis
+* Decision support system
+
+---
+
+### 🛡️ Risk Management
+
+* Position sizing
+* Stop-loss & take-profit rules
+* Portfolio exposure control
+
+---
+
+## 🚀 Getting Started
+
+### 1️⃣ Clone the repository
 
 ```bash
-python -m venv venv
+
+cd backend
+```
+
+---
+
+### 2️⃣ Create virtual environment
+
+```bash
+python3 -m venv venv
 source venv/bin/activate
+```
+
+---
+
+### 3️⃣ Install dependencies
+
+```bash
 pip install -r requirements.txt
 ```
 
 ---
 
-## 🔧 Run Migrations
+### 4️⃣ Setup environment variables
+
+Create `.env` file:
+
+```
+DEBUG=True
+SECRET_KEY=your_secret_key
+DATABASE_URL=postgres://user:password@localhost:5432/db_name
+```
+
+---
+
+### 5️⃣ Run migrations
 
 ```bash
-python manage.py makemigrations
 python manage.py migrate
 ```
 
 ---
 
-## ▶️ Run Server
+### 6️⃣ Run server
 
 ```bash
 python manage.py runserver
 ```
 
-Server will start at:
+---
+
+## 📡 API Endpoints (Example)
+
+| Endpoint               | Method   | Description       |
+| ---------------------- | -------- | ----------------- |
+| `/api/strategies/`     | GET/POST | Manage strategies |
+| `/api/execution/run/`  | POST     | Execute strategy  |
+| `/api/risk/check/`     | POST     | Risk validation   |
+
+
+---
+
+## 🧠 Architecture Overview
 
 ```
-http://127.0.0.1:8000/
+Frontend (Next.js / React)
+        ↓
+API Layer (Django REST)
+        ↓
+Core Modules:
+  - Strategies
+  - Execution
+  - AI
+  - Risk
+        ↓
+Database (PostgreSQL)
 ```
 
 ---
 
-## 🔐 Authentication
+## 🔐 Security
 
-JWT Authentication is enabled using **SimpleJWT**.
-
-Token lifetimes:
-
-* Access Token: **10 minutes**
-* Refresh Token: **7 days**
+* JWT Authentication
+* Environment-based secrets
+* Input validation
+* Role-based access control (future)
 
 ---
 
-## 📡 API Endpoints
+## 📈 Future Improvements
 
-### 1️⃣ Wallet Ping API
-
-**Endpoint**
-
-```
-POST /user/wallet/
-```
-
-**Purpose**
-
-* Creates a user if wallet does not exist
-* Returns existing user if wallet already exists
-
-**Request Body (JSON)**
-
-```json
-{
-  "wallet_address": "0x123abc..."
-}
-```
-
-**Response**
-
-```json
-{
-  "wallet_address": "0x123abc...",
-  "created": true
-}
-```
-
-* `created: true` → New user created
-* `created: false` → User already existed
-
-**❌ Error Response**
-
-If wallet address is missing:
-
-```json
-{
-  "error": "wallet_address is required"
-}
-```
-
-Status Code: **400 BAD REQUEST**
+* WebSocket for real-time trading updates
+* Advanced AI models (deep learning)
+* Multi-chain DeFi integration
+* Backtesting engine
+* Strategy marketplace
 
 ---
 
-## 📌 Notes
+## 🤝 Contribution
 
-* `DEBUG=True` is enabled for development only
-* `ALLOWED_HOSTS = ["*"]` should be restricted in production
+Contributions are welcome!
+
+Steps:
+
+1. Fork the repo
+2. Create feature branch
+3. Commit changes
+4. Submit PR
 
 ---
 
-## 📜 License
+## 📄 License
 
-MIT License
+This project is licensed under the MIT License.
 
 ---
 
 ## 👨‍💻 Author
 
-Built for Web3 / wallet-based authentication systems using Django.
+**Shah Rukh Rao**
+
+---
+
+## 💡 Vision
+
+To build a **fully automated AI-powered DeFi trading platform**
+that combines strategy, execution, and intelligence in one system.
+
+---

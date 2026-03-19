@@ -126,7 +126,7 @@ vaultx/
 │   ├── models/             # MongoDB models
 │   └── package.json
 │
-├── app/                    # Mobile app (React Native)
+├── mobile/                    # Mobile app (React Native)
 │   ├── src/
 │   ├── screens/
 │   ├── components/
